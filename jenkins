@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         GIT_REPO = 'https://github.com/asishpalatasingh2/pipelinetest-ch2.0.git'
-		ANYPOINT_CREDENTIALS = credentials(' MuleCredentials') 
+		ANYPOINT_CREDENTIALS = credentials('MuleCredential') 
 		EMAIL_RECIPIENT = 'asish.tgh@gmail.com'
         APPROVAL_EMAIL = 'd.teja1462@gmail.com'
         JENKINS_URL = 'http://localhost:8083/'
