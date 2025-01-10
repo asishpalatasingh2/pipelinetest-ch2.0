@@ -3,35 +3,44 @@ pipeline {
     
     environment {
         GIT_REPO = 'https://github.com/asishpalatasingh2/pipelinetest-ch2.0.git'
-		ANYPOINT_CREDENTIALS = credentials('MuleCredential') 
-		EMAIL_RECIPIENT = 'asish.tgh@gmail.com'
+        ANYPOINT_CREDENTIALS = credentials('MuleCredential') 
+        EMAIL_RECIPIENT = 'asish.tgh@gmail.com'
         APPROVAL_EMAIL = 'd.teja1462@gmail.com'
         JENKINS_URL = 'http://localhost:8083/'
-	} 
+    } 
     
     stages {
-		stage('Build Application') { 
+        stage('Build Application') { 
             steps { 
                 bat 'mvn clean install' 
             } 
         }
-        stage('Approval') {
+        stage('Publish to exchange') { 
+            steps { 
+                if(env.GIT_BRANCH.toLowerCase() == 'origin/dev') {
+    			bat 'mvn clean deploy -DskipTests'
+		}
+            } 
+	}
+
+
+     stage('Approval') {
             steps {
                 script {
-                	if(env.GIT_BRANCH.toLowerCase() == 'origin/Prod') {
-                    	sendApprovalEmail()
-                    	def approvalResponse = input(
-                        	id: 'userInput',
-                        	message: 'Please approve the deployment to dev environment',
-                        	parameters: [
-                            	[$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Approve Deployment?', name: 'Approve']
-                        	],
-                        	timeout: 5 * 60, // 5 minutes timeout
-                        	timeoutMessage: 'Approval timed out. Deployment not approved.'
-                    	)
-                    	if (!approvalResponse) {
-                        	error 'Deployment not approved. Aborting.'
-                    	}
+                    if(env.GIT_BRANCH.toLowerCase() == 'origin/Prod') {
+                        sendApprovalEmail()
+                        def approvalResponse = input(
+                            id: 'userInput',
+                            message: 'Please approve the deployment to dev environment',
+                            parameters: [
+                                [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Approve Deployment?', name: 'Approve']
+                            ],
+                            timeout: 5 * 60, // 5 minutes timeout
+                            timeoutMessage: 'Approval timed out. Deployment not approved.'
+                        )
+                        if (!approvalResponse) {
+                            error 'Deployment not approved. Aborting.'
+                        }
                     } else{
                     echo "Approval Not needed"
                     }
@@ -41,7 +50,7 @@ pipeline {
         stage('Build and Deploy') {
             steps {
                 script {
-					if(env.GIT_BRANCH.toLowerCase() == 'origin/dev') {
+                    if(env.GIT_BRANCH.toLowerCase() == 'origin/dev') {
                     deployToAnypoint('Sandbox','a-pipeline-dev')
                     }
                     else if(env.GIT_BRANCH.toLowerCase() == 'origin/QA') {
@@ -65,13 +74,11 @@ pipeline {
         }
     }
 }
-
 def deployToAnypoint(environmentName,appName) {
-	echo environmentName
+    echo environmentName
     echo 'Deploying mule project due to the latest code commit…' 
-	echo 'Deploying to the configured environment….' 
-	bat 'mvn clean deploy -DskipTests'
-	bat """
+    echo 'Deploying to the configured environment….' 
+    bat """
         mvn clean deploy -DmuleDeploy \
             -DPLATFORM_USERNAME=${env.ANYPOINT_CREDENTIALS_USR} \
             -DPLATFORM_PASSWORD=${env.ANYPOINT_CREDENTIALS_PSW} \
