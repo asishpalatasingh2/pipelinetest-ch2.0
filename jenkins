@@ -20,6 +20,9 @@ pipeline {
                 if(env.GIT_BRANCH.toLowerCase() == 'origin/dev') {
     			bat 'mvn clean deploy -DskipTests'
 		}
+		else {
+			echo 'Application already deployed in dev process' 
+		}
             } 
 	}
 
