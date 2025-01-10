@@ -1,0 +1,25 @@
+{
+  "configs": [
+    "demo-cicd-ch2.0.xml"
+  ],
+  "secureProperties": [],
+  "supportedJavaVersions": [],
+  "redeploymentEnabled": true,
+  "name": "f3033628-9fc1-43ff-8add-49d384fb0ab2:demo-cicd-ch2.0:1.0.0",
+  "minMuleVersion": "4.6.0",
+  "requiredProduct": "MULE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedPackages": [],
+      "exportedResources": [
+        "demo-cicd-ch2.0.xml",
+        "log4j2.xml"
+      ]
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}
