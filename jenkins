@@ -58,10 +58,10 @@ pipeline {
                     if(env.GIT_BRANCH.toLowerCase() == 'origin/dev') {
                     deployToAnypoint('Sandbox','a-pipeline-dev')
                     }
-                    else if(env.GIT_BRANCH.toLowerCase() == 'origin/QA') {
+                    else if(env.GIT_BRANCH.toLowerCase() == 'origin/qa') {
                     deployToAnypoint('Sandbox','a-pipeline-qa')
                     }
-                    else if(env.GIT_BRANCH.toLowerCase() == 'origin/Prod') {
+                    else if(env.GIT_BRANCH.toLowerCase() == 'origin/prod') {
                     deployToAnypoint('Sandbox','a-pipeline-prod')
                     }
                     else {
